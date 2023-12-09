@@ -7,12 +7,18 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -20,9 +26,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class OpenMensaAPITests {
 
 	private static final Logger logger = LogManager.getLogger(OpenMensaAPITests.class);
+
+	//private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 	private OpenMensaAPI openMensaAPI;
 
-	@BeforeAll
+	@BeforeEach
 	void setup() {
 
 		// use this to intercept all requests and output them to the logging facilities
@@ -44,12 +52,14 @@ class OpenMensaAPITests {
 
 	@Test
 	void testGetMeals() throws IOException {
-		// TODO prepare call
+		// create call to get all meals of current day
+		Call<List<Meal>> mealsCall = openMensaAPI.getMeals("2023-12-11");
 
-		// TODO execute the call synchronously
+		// execute the call synchronously
+		Response<List<Meal>> mealsResponse = mealsCall.execute();
 
-		// TODO unwrap the body
-		List<Meal> meals = null;
+		// unwrap response
+		List<Meal> meals = mealsResponse.body();;
 
 		assertNotNull(meals);
 		assertNotEquals(0, meals.size());
